@@ -1,2 +1,0 @@
-# javascript-demo
-JavaScript examples
