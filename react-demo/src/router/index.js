@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, NavLink } from "react-router-dom"
 import Debounce from '../component/debounce'
 import Throttle from '../component/throttle'
 import DeepClone from '../component/deepClone'
+import EventEmeitter from '../component/eventEmeitter'
 
 
 const styles = {
@@ -11,7 +12,7 @@ const styles = {
   listStyle: 'none'
 }
 const liStyle = {
-  width: "100px",
+  padding: "10px 20px",
   textAlign: 'center',
   listStyle: 'none'
 }
@@ -51,6 +52,14 @@ const BasicRouter = () => {
               }}
             >DeepClone</NavLink >
           </li>
+          {/* eventEmeitter */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: "/eventEmeitter", search: "?title=EventEmeitter"}}
+            >
+              EventEmeitter
+            </NavLink>
+          </li>
         </ul>
         <hr />
 
@@ -61,6 +70,7 @@ const BasicRouter = () => {
         />
         <Route path="/throttle" component={Throttle}></Route>
         <Route path="/deepClone" component={DeepClone}></Route>
+        <Route path="/eventEmeitter" component={EventEmeitter}></Route>
       </div>
     </Router>
   );
