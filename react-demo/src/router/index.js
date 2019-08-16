@@ -4,6 +4,9 @@ import Debounce from '../component/debounce'
 import Throttle from '../component/throttle'
 import DeepClone from '../component/deepClone'
 import EventEmeitter from '../component/eventEmeitter'
+import LifeCycle from "../component/lifeCycle"
+import InstanceOf from "../component/instanceof"
+import Promise from "../component/promise"
 
 
 const styles = {
@@ -60,17 +63,40 @@ const BasicRouter = () => {
               EventEmeitter
             </NavLink>
           </li>
+          {/* lifeCycle */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: "/lifeCycle", search: "?title=LifeCycle"}}
+            >
+              lifeCycle
+            </NavLink>
+          </li>
+          {/* instanceOf */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: "/instanceOf", search: "?title=InstanceOf"}}
+            >
+              instanceOf
+            </NavLink>
+          </li>
+          {/* promise */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: "/promise", search: "?title=Promise"}}
+            >
+              promise
+            </NavLink>
+          </li>
         </ul>
         <hr />
 
-        <Route 
-          exact 
-          path="/debounce"
-          render={props => <Debounce {...props}/>}
-        />
+        <Route exact  path="/debounce" component={Debounce}></Route>
         <Route path="/throttle" component={Throttle}></Route>
         <Route path="/deepClone" component={DeepClone}></Route>
         <Route path="/eventEmeitter" component={EventEmeitter}></Route>
+        <Route path="/lifeCycle" component={LifeCycle}></Route>
+        <Route path="/instanceOf" component={InstanceOf}></Route>
+        <Route path="/promise" component={Promise}></Route>
       </div>
     </Router>
   );

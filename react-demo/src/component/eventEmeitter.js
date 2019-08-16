@@ -99,18 +99,16 @@ class EventEmeitConsole extends React.Component{
     })
   }
   render() {
-    {
-      return (
-        <div style={styles}>
-          <button
-            onClick={this.handleEmeit.bind(this)}
-          >点我发射 emit</button>
-          <span>
-            {this.state.num}
-          </span>
-        </div>
-      )
-    }
+    return (
+      <div style={styles}>
+        <button
+          onClick={this.handleEmeit.bind(this)}
+        >点我发射 emit</button>
+        <span>
+          {this.state.num}
+        </span>
+      </div>
+    )
   }
   handleEmeit() {
     emitter.emit("emiter", 1)
