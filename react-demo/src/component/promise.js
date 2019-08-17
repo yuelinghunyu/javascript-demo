@@ -40,7 +40,7 @@ function runAsync3(){
 }
 
 Promise.race([runAsync1(), runAsync2(), runAsync3()]).then(res => {
-  console.log(res)
+  // console.log(res)
 })
 
 const PromiseCode = () => {

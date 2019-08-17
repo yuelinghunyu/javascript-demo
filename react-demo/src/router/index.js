@@ -7,12 +7,19 @@ import EventEmeitter from '../component/eventEmeitter'
 import LifeCycle from "../component/lifeCycle"
 import InstanceOf from "../component/instanceof"
 import Promise from "../component/promise"
+import News from "../component/new"
+import This from "../component/this"
 
-
+const headStyle = {
+  width: "100%",
+  overflow: "hidden",
+  overflowX: 'auto'
+}
 const styles = {
   display: 'flex',
   flexDirection: 'row',
-  listStyle: 'none'
+  listStyle: 'none',
+  flexWrap: "nowrap"
 }
 const liStyle = {
   padding: "10px 20px",
@@ -23,7 +30,7 @@ const liStyle = {
 const BasicRouter = () => {
   return (
     <Router>
-      <div>
+      <div style={headStyle}>
         <ul style={styles}>
           {/* Debounce */}
           <li style={liStyle}>
@@ -87,9 +94,26 @@ const BasicRouter = () => {
               promise
             </NavLink>
           </li>
+          {/* New */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: "/new", search:"?title=New"}}
+            >
+              new
+            </NavLink>
+          </li>
+          {/* this */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: "/this", search: "?title=This"}}
+            >
+              this
+            </NavLink>
+          </li>
         </ul>
-        <hr />
-
+      </div>
+      <hr />
+      <div>
         <Route exact  path="/debounce" component={Debounce}></Route>
         <Route path="/throttle" component={Throttle}></Route>
         <Route path="/deepClone" component={DeepClone}></Route>
@@ -97,6 +121,8 @@ const BasicRouter = () => {
         <Route path="/lifeCycle" component={LifeCycle}></Route>
         <Route path="/instanceOf" component={InstanceOf}></Route>
         <Route path="/promise" component={Promise}></Route>
+        <Route path="/new" component={News}></Route>
+        <Route path="/this" component={This}></Route>
       </div>
     </Router>
   );
