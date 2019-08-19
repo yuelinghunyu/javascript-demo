@@ -9,6 +9,7 @@ import InstanceOf from "../component/instanceof"
 import Promise from "../component/promise"
 import News from "../component/new"
 import This from "../component/this"
+import Call from "../component/call"
 
 const headStyle = {
   width: "100%",
@@ -110,6 +111,14 @@ const BasicRouter = () => {
               this
             </NavLink>
           </li>
+          {/* call */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: '/call', search: "?title=Call"}}
+            >
+              call
+            </NavLink>
+          </li>
         </ul>
       </div>
       <hr />
@@ -123,6 +132,7 @@ const BasicRouter = () => {
         <Route path="/promise" component={Promise}></Route>
         <Route path="/new" component={News}></Route>
         <Route path="/this" component={This}></Route>
+        <Route path="/call" component={Call}></Route>
       </div>
     </Router>
   );

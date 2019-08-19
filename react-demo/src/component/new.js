@@ -31,7 +31,7 @@ Person.prototype.sayHi=function(){
   console.log("I am "+this.name);
 }
 
-const person = objectFactory(Person, 'jdj', 18)
+// const person = objectFactory(Person, 'jdj', 18)
 // console.log(person)
 
 const NewCode = () => {
