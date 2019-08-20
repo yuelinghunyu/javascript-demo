@@ -25,7 +25,7 @@ const array = [1]
 const CallCode = () => {
   return(
     <pre>
-      {/* {"Function.prototype.myCall = " + Function.myCall} */}
+      {"Function.prototype.myCall = " + Function.myCall}
     </pre>
   )
 }

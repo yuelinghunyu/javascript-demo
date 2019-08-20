@@ -10,6 +10,7 @@ import Promise from "../component/promise"
 import News from "../component/new"
 import This from "../component/this"
 import Call from "../component/call"
+import Apply from "../component/apply"
 
 const headStyle = {
   width: "100%",
@@ -119,6 +120,14 @@ const BasicRouter = () => {
               call
             </NavLink>
           </li>
+          {/* apply */}
+          <li style={liStyle}>
+            <NavLink
+              to={{pathname: '/apply', search: "?title=Apply"}}
+            >
+              apply
+            </NavLink>
+          </li>
         </ul>
       </div>
       <hr />
@@ -133,6 +142,7 @@ const BasicRouter = () => {
         <Route path="/new" component={News}></Route>
         <Route path="/this" component={This}></Route>
         <Route path="/call" component={Call}></Route>
+        <Route path="/apply" component={Apply}></Route>
       </div>
     </Router>
   );
