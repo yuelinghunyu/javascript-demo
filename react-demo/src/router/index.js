@@ -11,6 +11,7 @@ import News from "../component/new"
 import This from "../component/this"
 import Call from "../component/call"
 import Apply from "../component/apply"
+import ParseToMoney from '../component/parseToMoney'
 
 const headStyle = {
   width: "100%",
@@ -128,6 +129,14 @@ const BasicRouter = () => {
               apply
             </NavLink>
           </li>
+          {/* parseToMoney */}
+          <li style={liStyle}>
+              <NavLink
+                to={{pathname: '/parseToMoney', search: "?title=ParseToMoney"}}
+              >
+                parseToMoney
+              </NavLink>
+          </li>
         </ul>
       </div>
       <hr />
@@ -143,6 +152,7 @@ const BasicRouter = () => {
         <Route path="/this" component={This}></Route>
         <Route path="/call" component={Call}></Route>
         <Route path="/apply" component={Apply}></Route>
+        <Route path="/parseToMoney" component={ParseToMoney}></Route>
       </div>
     </Router>
   );
