@@ -10,6 +10,7 @@ const styles = {
 // eslint-disable-next-line
 Function.prototype.myCall = function(context) {
   context.fn = this || window
+  debugger
   let args = []
   for(let i = 0, len = arguments.length; i < len; i++) {
     args.push(arguments[i])

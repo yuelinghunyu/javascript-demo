@@ -12,6 +12,7 @@ export default {
   props: ["show"],
   methods: {
     closeDiv() {
+      // this.show = false
       this.$emit("update:show", false);
     }
   }

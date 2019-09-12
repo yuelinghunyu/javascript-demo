@@ -1,6 +1,7 @@
 <template>
   <div class="common">
-    <router-link to="/sync">Sync</router-link>
+    <!-- <router-link to="/sync">Sync</router-link>
+    <router-link to="/mso-pic">MsoPic</router-link> -->
   </div>  
 </template>
 
