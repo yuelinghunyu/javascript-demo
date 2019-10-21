@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Common/>
+    <!-- <Common/> -->
     <div>
       <router-view></router-view>
     </div>

@@ -4,6 +4,8 @@ import router from './router'
 
 Vue.config.productionTip = false
 
+import "./static/fonts/iconfont.css"
+
 // runtime 模式
 new Vue({
   render: h => h(App),

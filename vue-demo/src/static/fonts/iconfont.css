@@ -1,0 +1,29 @@
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1571639278345'); /* IE9 */
+  src: url('iconfont.eot?t=1571639278345#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAPkAAsAAAAACEwAAAOXAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDHAqECINoATYCJAMQCwoABCAFhG0HRRtXB8gusG3YEygWd4PfAJ8CFj7wOhEP9Pu1P1d2uZimhSQatcN0EtUltA0NGtOtETKl2U9q6ef3p+71+csBYCUjAhgkxzGevsJFWANzaUacMnYKwZitHdYO3tw6V5/JEw80kOxo0/r0DlBWHl/S2wAB4vvzlxt+6Jjp0tqG0TySGd6tKqk4EnAUrQOK+qgg+wd7Qf0Fdg7hdwJuJqDNiGzCSmv3MPjLlF0B4UTXJPAPmeQcclC09ZQTM4Rr4KPEx9gK4Mr+/fALCvMHUS2BcuDqXosK9V8Dr+bRrb8J0yYCiNtzQDqNhFkgEw5SXVuQm5qFtH2WixaAooi0NVN5Nf+/IslcVEX9l0cSBUIdlPwOMEfpxNdAXeSrK9EgonoeJTtwowwK2vEA4B8ouAaeLMm98fjg4JAQ+rSNoJ3ITTnuSQeg+QpF8kbgduhmPP+0B9B86YXQCtoKnDj3kAHC2y0KxLXATd9JQDFGFjeeDzaeD0cPnwzv72uUWyMHB5SnY0dHhttqGnRg7EH7+5Oj25vA0wzksZ3b5pOXgmerRi3Ebzd8ADLEhIy2G6M+fMCH4OHh6l/xu8tMc5VwyFEwdLyEhCVUwfnvv36LjhqS/3G4xGJYWjHuWV7uwX3pbzRgAS+Oe9L73lDFlJLX1y26TtEL1XC9M2T+oow7H21l11/w31Wc6wyFwGNmaFp7antaIy84tSPvJtRSNaIl65E/xfviDxWYip8s9UuD9sqeo+1IfMaAgavL+cLgAlTQgpoBqtAbXAGV7PmN6/d9k8vj9am5sOr//kEb3vW25/6zgxUR1BPfPHFp8V0Wl2zKX6lizvkt00U/d7YS2CWiTRvubY4+l214BoHvCIosRlbUYpiVFKPIjJ1l1bSbC9cV88unzYw2PL1dPwYJOQCYdh9YQY/XrKjLEyvp8QeZsResmiF/WXU9IVabtRB1wXbj6YFNjEicqFhew7ri2FSz8kCncJBoS6bEglKbOkqYV4/igtz8aLaN2IS1cYh3WSvknGLKHAu3wu2IaTrYZc4iUXjuAuduZV4eTfumXMWxINAyhpBwhAqTrcF0CoeNmp25wNjPDyI0S0wSllP2wz+KYLz0+bECufJLINtUdqmyY3mN1zJNIY6jMIpxWLBWcBCmmnJgbvq6RYSCy7VQI+GqlEftaFlVbv8a6wgPQRvlwjl4BCSIgg+UyyXJdnVb85UdKlkOv3Vpe4K2BgAA') format('woff2'),
+  url('iconfont.woff?t=1571639278345') format('woff'),
+  url('iconfont.ttf?t=1571639278345') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1571639278345#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-quanping:before {
+  content: "\e660";
+}
+
+.icon-bofang:before {
+  content: "\e63a";
+}
+
+.icon-zanting:before {
+  content: "\e60a";
+}
+
