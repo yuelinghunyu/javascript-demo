@@ -1,8 +1,9 @@
 <template>
   <div
     class="custom-video_container"
-    @mouseover="handlehover($event, 'start')"
-    @mouseout="handlehover($event, 'end')"
+    ref="custom-video_container"
+    @mouseover="handleControls($event, 'start')"
+    @mouseleave="handleControls($event, 'end')"
   >
     <video
       class="custom-video_video"
@@ -15,13 +16,13 @@
     <span
       v-if="videoState.play"
       class="custom-video_play custom-video_play-pause iconfont icon-zanting"
-      @click="pause"
+      @click="pause('btn')"
     >
     </span>
     <span
       v-else
       class="custom-video_play custom-video_play-play iconfont icon-bofang"
-      @click="play"
+      @click="play('btn')"
     >
     </span>
     <!-- 控制区域背景 -->
@@ -36,7 +37,7 @@
         <div
           class="custom-video_control-bg"
           @mousedown="handlePrograssDown"
-          @mousemove.stop="handlePrograssMove"
+          @mousemove="handlePrograssMove"
           @mouseup="handlePrograssUp"
         >
           <div 
@@ -60,6 +61,27 @@
           <span
             class="custom-video_control-voice-play iconfont icon-shengyin"
           ></span>
+          <div
+            class="custom-video_control-voice-bg"
+            ref="custom-video_control-voice-bg"
+            @mousedown="handleVolPrograssDown"
+            @mousemove="handleVolPrograssMove"
+            @mouseup="handleVolPrograssUp"
+          >
+            <div 
+              class="custom-video_control-voice-bg-outside"
+              ref="custom-video_control-voice-bg-outside"
+            >
+              <span 
+                class="custom-video_control-voice-bg-inside"
+                ref="custom-video_control-voice-bg-inside"
+              ></span>
+              <span 
+                class="custom-video_control-voice-bg-point"
+                ref="custom-video_control-voice-bg-point"
+              ></span>
+            </div>
+          </div>
         </div>
         <!-- 时间 -->
         <div
@@ -72,6 +94,7 @@
         <!-- 全屏缩放 -->
         <span
           class="custom-video_control-full iconfont icon-quanping"
+          @click="handleScreen"
         ></span>
       </div>
     </transition>
@@ -84,22 +107,33 @@ export default {
       videoOption: {
         src: require("../../static/media/taru.mp4"), //视频
         poster: require("../../static/images/poster.jpg"), // 初始化占位图片
+        volume: 20
       },
       videoState: {
         play: false, //播放状态
         hideControl: false, // 控制栏状态
         distance: 0, // 移动的距离
-        startX: 0, // 初始鼠标点击的x距离
+        downState: false, // 鼠标点击进度条
+        playState: false,
+        leftInit: 0, // 当前进度初始偏移量
+        screenState: false
       },
-      processName: ["custom-video_control-bg", "custom-video_control-bg-outside", "custom-video_control-bg-inside", "custom-video_control-bg-inside-point"],
+      voiceState: { // 同上
+        distance: 0,
+        downState: false,
+        topInit: 0
+      },
       videoDom: null, // video
-      videoProOut: null, // 总进度条
-      videoPro: null, // 进度条
-      videoPoi: null, // 进度点
-      duration: 0, // 总时长
-      currentTime: 0, // 当前播放时长
-      processWidth: 0, // 进度条总长度
-      leftInit: 0, // 当前进度初始偏移量
+      videoProOut: null, // 视频总进度条
+      videoPro: null, // 视频进度条
+      videoPoi: null, // 视频进度点
+      duration: 0, // 视频总时长
+      currentTime: 0, // 视频当前播放时长
+      processWidth: 0, // 视频进度条总长度
+      voiceProOut: null, // 音频总进度条
+      voicePro: null, // 音频进度条
+      voicePoi: null, // 音频进度点
+      volProcessHeight: 0,
     }
   },
   mounted() {
@@ -108,8 +142,14 @@ export default {
     this.videoProOut = this.$refs['custom-video_control-bg-outside']
     this.videoPro = this.$refs['custom-video_control-bg-inside']
     this.videoPoi = this.$refs['custom-video_control-bg-inside-point']
+
+    this.voiceProOut = this.$refs['custom-video_control-voice-bg-outside']
+    this.voicePro = this.$refs['custom-video_control-voice-bg-inside']
+    this.voicePoi = this.$refs['custom-video_control-voice-bg-point']
+
     this.processWidth = this.videoProOut.clientWidth
-    this.leftInit = this.getOffset(this.videoProOut).left
+    this.videoState.leftInit = this.getOffset(this.videoProOut).left
+    this.videoDom.volume = this.videoOption.volume / 100 // 设置初始化声音
     this.initMedaData()
   },
   methods: {
@@ -120,19 +160,17 @@ export default {
       this.videoDom.addEventListener("click", () => { // 点击视频区域可以进行播放或者暂停
         if(this.videoDom.paused || this.videoDom.ended) {
             if(this.videoDom.ended) {
-                this.videoDom.currentTime = 0
+              this.videoDom.currentTime = 0
             }
-            this.videoState.play = true
-            this.videoDom.play()
+            this.play('btn')
         } else {
-            this.videoDom.pause()
-            this.videoState.play = false
+          this.pause('btn')
         }
       })
       this.videoDom.addEventListener("timeupdate", () => { // 监听视频播放过程中的时间
         const percentage = 100 * this.videoDom.currentTime / this.videoDom.duration
         this.videoPro.style.width = percentage + '%'
-        this.videoPoi.style.left = percentage + '%'
+        this.videoPoi.style.left = percentage - 1 + '%'
         this.currentTime = this.timeTranslate(this.videoDom.currentTime)
       })
       this.videoDom.addEventListener("ended", () => { // 监听结束播放事件
@@ -142,43 +180,92 @@ export default {
         this.videoState.play = false
         this.videoState.hideControl = false
       })
+      this.videoDom.addEventListener("volumechange", () => {
+        const percentage =  this.videoDom.volume * 100
+        this.voicePro.style.height = percentage + '%'
+        this.voicePoi.style.bottom = percentage + '%'
+      })
     },
-    play() { // 播放按钮事件
+    play(flag) { // 播放按钮事件
+      if(flag) this.videoState.playState = true
       this.videoState.play = true
       this.videoDom.play()
     },
-    pause() { // 暂停按钮事件
+    pause(flag) { // 暂停按钮事件
+      if(flag) this.videoState.playState = false
       this.videoDom.pause()
       this.videoState.play = false
     },
     handlePrograssDown(ev) { // 监听点击进度条事件，方便获取初始点击的位置
       // 视频暂停
+      this.videoState.downState = true //按下鼠标标志
       this.pause()
-      this.videoState.startX = ev.clientX
-      this.videoState.distance = this.videoState.startX - this.leftInit
-      // 进度条距离、点的位置
-      this.videoPro.style.width = this.videoState.distance + 'px'
-      this.videoPoi.style.left = this.videoState.distance + 'px'
+      this.videoState.distance = ev.clientX - this.videoState.leftInit
     },
     handlePrograssMove(ev) { // 监听移动进度条事件，同步播放相关事件
-      // console.log("移动")
+      if(!this.videoState.downState) return
+      let disX = ev.clientX - this.videoState.leftInit
+      if(disX > this.processWidth) {
+        disX = this.processWidth
+      }
+      if(disX < 0) {
+        disX = 0
+      }
+      this.videoState.distance = disX
+      this.videoDom.currentTime = this.videoState.distance / this.processWidth * this.videoDom.duration
+      const percentage = 100 * this.videoDom.currentTime / this.videoDom.duration
     },
     handlePrograssUp(ev) { //松开鼠标，播放当前进度条视频
+      this.videoState.downState = false
       // 视频播放
       this.videoDom.currentTime = this.videoState.distance / this.processWidth * this.videoDom.duration
       this.currentTime = this.timeTranslate(this.videoDom.currentTime)
-      this.play()
+      if(this.videoState.playState) {
+        this.play()
+      }
     },
-    handlehover(ev, flag) { // 监听离开或者进入视频区域隐藏或者展示控制栏
-      const className = ev.target.className
-      if(this.processName.includes(className)) {
-        this.videoState.hideControl = false
+    handleVolPrograssDown(ev) { // 监听声音点击事件
+      this.voiceState.topInit = this.getOffset(this.voiceProOut).top
+      this.volProcessHeight = this.voiceProOut.clientHeight
+      this.voiceState.downState = true //按下鼠标标志
+      this.voiceState.distance = ev.clientY - this.voiceState.topInit
+    },
+    handleVolPrograssMove(ev) { // 监听声音进度条移动事件
+      if(!this.voiceState.downState) return
+      let disY = this.voiceState.topInit + this.volProcessHeight - ev.clientY
+      if(disY > this.volProcessHeight - 2) {
+        disY = this.volProcessHeight - 2
+      }
+      if(disY < 0) {
+        disY = 0
+      }
+      this.voiceState.distance = disY
+      this.videoDom.volume = this.voiceState.distance / this.volProcessHeight
+      this.videoOption.volume = Math.round(this.videoDom.volume * 100)
+    },
+    handleVolPrograssUp(ev) { // 监听声音鼠标离开事件
+      this.voiceState.downState = false //按下鼠标标志
+      this.videoDom.volume = this.voiceState.distance / this.volProcessHeight
+      this.videoOption.volume = Math.round(this.videoDom.volume * 100)
+    },
+    handleControls(ev, flag) { // 监听离开或者进入视频区域隐藏或者展示控制栏
+      switch (flag) {
+        case 'start':
+          this.videoState.hideControl = false
+          break;
+        case 'end':
+          this.videoState.hideControl = true
+          break;
+        default:
+          break;
+      }
+    },
+    handleScreen() { // 全屏操作
+      this.videoState.screenState = !this.videoState.screenState
+      if(this.videoState.screenState) {
+        this.fullScreen()
       } else {
-        console.log(flag)
-        switch(flag) {
-          case 'start': this.videoState.hideControl = false;  break;
-          case 'end': this.videoState.hideControl = true;  break;
-        }
+        this.exitFullscreen()
       }
     },
     timeTranslate(t) { // 时间转化
@@ -192,12 +279,36 @@ export default {
         offset.left = 0
         offset.top = 0
       }
-      if(node === document.body) {
+      if(node === document.body || node === null) {
         return offset
       }
       offset.top += node.offsetTop
       offset.left += node.offsetLeft
       return this.getOffset(node.offsetParent, offset)
+    },
+    fullScreen() {
+      let ele = document.documentElement
+      if (ele .requestFullscreen) {
+        ele .requestFullscreen()
+      } else if (ele .mozRequestFullScreen) {
+        ele .mozRequestFullScreen()
+      } else if (ele .webkitRequestFullScreen) {
+        ele .webkitRequestFullScreen()
+      }
+      this.$refs['custom-video_container'].style.width = "100%"
+      this.$refs['custom-video_container'].style.height = "100%"
+    },
+    exitFullscreen() {
+      let de = document
+      if (de.exitFullscreen) {
+        de.exitFullscreen();
+      } else if (de.mozCancelFullScreen) {
+        de.mozCancelFullScreen();
+      } else if (de.webkitCancelFullScreen) {
+        de.webkitCancelFullScreen();
+      }
+      this.$refs['custom-video_container'].style.width = "500px"
+      this.$refs['custom-video_container'].style.height = "300px"
     }
   }
 }
@@ -213,8 +324,8 @@ export default {
 }
 /* 视频标签 */
 .custom-video_video{
-  width: 500px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   object-fit: fill;
 }
 /* 暂停 或者 播放 */
@@ -282,6 +393,7 @@ export default {
   left: 0;
   top: 0;
   background-color: #fff;
+  transition: all 0.2s;
 }
 /* 控制栏进度条 —— 播放点 */
 .custom-video_control-bg-inside-point{
@@ -292,7 +404,8 @@ export default {
   border-radius: 50%;
   position: absolute;
   top: -2.5px;
-  left: 0;
+  left: -1%;
+  transition: all 0.2s;
 }
 /* 控制栏 —— 声音、时间、全屏缩放 */
 .custom-video_control-voice,
@@ -303,9 +416,59 @@ export default {
   justify-content: center;
   align-items: center;
   color: #fff;
+  position: relative;
+}
+.custom-video_control-voice:hover > .custom-video_control-voice-bg{
+  display: block;
+}
+.custom-video_control-voice-play{
+  z-index: 10;
+}
+.custom-video_control-voice-bg{
+  display: none;
+  position: absolute;
+  width: 30px;
+  height: 100px;
+  background-color: rgba(0, 0, 0, .55);
+  left: 0;
+  bottom: 0px;
+  border-radius: 15px;
+}
+.custom-video_control-voice-bg-outside{
+  width: 5px;
+  height: 70px;
+  border-radius: 2.5px;
+  background-color: #aaa;
+  position: absolute;
+  left: 50%;
+  transform: translate3d(-50%, 10%, 0);
+  cursor: pointer;
+}
+.custom-video_control-voice-bg-inside{
+  display: inline-block;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  border-radius: 2.5px;
+  background-color: #fff;
+  height: 0;
+}
+.custom-video_control-voice-bg-point{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  left: -2.5px;
+  bottom: -1px;
 }
 .custom-video_control-time{
   font-size: 12px;
+}
+.custom-video_control-full{
+  font-size: 14px;
 }
 .custom-video_control-voice,
 .custom-video_control-full{

@@ -8,12 +8,12 @@
 </template>
 
 <script>
-import Common from './components/common.vue'
+// import Common from './components/common.vue'
 
 export default {
   name: 'app',
   components: {
-    Common
+    // Common
   }
 }
 </script>
