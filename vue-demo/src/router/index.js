@@ -5,6 +5,7 @@ Vue.use(VueRouter)
 const Sync = () => import("../components/sync/sync")
 const MsoPic = () => import("../components/mso-pic/msoPic")
 const Video = () => import("../components/video/video")
+const Focus = () => import("../components/focus/focus")
 
 const routes = [
   {
@@ -15,6 +16,9 @@ const routes = [
   },
   {
     path: "/video", component: Video
+  },
+  {
+    path: "/focus", component: Focus
   }
 ]
 
